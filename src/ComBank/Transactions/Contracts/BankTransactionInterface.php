@@ -16,4 +16,5 @@ interface BankTransactionInterface
 {
     public function applyTransaction(BackAccountInterface $account): float;
     public function getTransactionInfo(): string;
+    public function getAmount(): float;
 }
