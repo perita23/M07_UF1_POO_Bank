@@ -10,6 +10,8 @@
 use ComBank\Exceptions\InvalidArgsException;
 use ComBank\Exceptions\ZeroAmountException;
 
+use function PHPUnit\Framework\isNan;
+
 trait AmountValidationTrait
 {
     /**
@@ -21,6 +23,9 @@ trait AmountValidationTrait
     {
         if ($amount <= 0){
             throw new ZeroAmountException("Error Processing Request", 1);
+        }
+        if (is_nan($amount)){
+            throw new InvalidArgsException("Error Processing Request", 1);
         }
     }
 }

@@ -52,16 +52,18 @@ class BankAccount implements BackAccountInterface
     {
         if ($this->status == BackAccountInterface::STATUS_CLOSED) {
             $this->status = BackAccountInterface::STATUS_OPEN;
+            echo "My account is now reopened<br>";
         }else{
-            throw new BankAccountException("Error Processing Request", 1);
+            throw new BankAccountException("Account is alredy open", 1);
         }
     }
     public function closeAccount(): void
     {
         if ($this->status == BackAccountInterface::STATUS_OPEN) {
             $this->status = BackAccountInterface::STATUS_CLOSED;
+            echo "My account is now closed<br>";
         }else{
-            throw new BankAccountException("Error Processing Request", 1);
+            throw new BankAccountException("Account is already closed<br>", 1);
         }
     }
     public function getBalance(): float

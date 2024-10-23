@@ -28,11 +28,11 @@ class WithdrawTransaction extends BaseTransaction implements BankTransactionInte
             return $account->getBalance();
         }
         if ($account->getOverdraft()->getOverdraftFundsAmount() == 0){
-            throw new InvalidOverdraftFundsException("Error Processing Request", 1);
+            throw new InvalidOverdraftFundsException("Withdrawal exceeds overdraft limit.", 1);
         }
             
 
-        throw new FailedTransactionException("Error Processing Request", 1);
+        throw new FailedTransactionException("insufficient balance to complete the withdrawal", 1);
     }
     public function getTransactionInfo(): string
     {
