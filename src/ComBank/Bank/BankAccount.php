@@ -35,7 +35,8 @@ class BankAccount implements BackAccountInterface
         if($this->status != BackAccountInterface::STATUS_CLOSED){
             $transaction->applyTransaction($this);
         }else{
-            /*Throw */
+            throw new BankAccountException("Error Processing Request", 1);
+            
         }
     }
     public function
@@ -84,5 +85,6 @@ class BankAccount implements BackAccountInterface
     {
         $this->balance = $balance;
         $this->status = BackAccountInterface::STATUS_OPEN;
+        $this->overdraft = new NoOverdraft();
     }
 }

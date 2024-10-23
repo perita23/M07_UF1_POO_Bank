@@ -10,6 +10,7 @@ namespace ComBank\Transactions;
  */
 
 use ComBank\Bank\Contracts\BackAccountInterface;
+use ComBank\Exceptions\FailedTransactionException;
 use ComBank\Exceptions\InvalidOverdraftFundsException;
 use ComBank\Transactions\Contracts\BankTransactionInterface;
 
@@ -22,12 +23,20 @@ class WithdrawTransaction extends BaseTransaction implements BankTransactionInte
     }
     public function applyTransaction(BackAccountInterface $account): float
     {
-        $account->setBalance($account->getBalance() - $this->amount);
-        return $account->getBalance();
+        if ($account->getOverdraft()->isGrantOverdraftFunds($account->getBalance() - $this->amount)) {
+            $account->setBalance($account->getBalance() - $this->amount);
+            return $account->getBalance();
+        }
+        if ($account->getOverdraft()->getOverdraftFundsAmount() == 0){
+            throw new InvalidOverdraftFundsException("Error Processing Request", 1);
+        }
+            
+
+        throw new FailedTransactionException("Error Processing Request", 1);
     }
     public function getTransactionInfo(): string
     {
-        return "Deposito de " . $this->getAmount() . ".";
+        return 'WITHDRAW_TRANSACTION';
     }
     public function getAmount(): float
     {
