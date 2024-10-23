@@ -61,7 +61,7 @@ class BankAccount implements BackAccountInterface
     {
         if ($this->status == BackAccountInterface::STATUS_OPEN) {
             $this->status = BackAccountInterface::STATUS_CLOSED;
-            echo "My account is now closed<br>";
+            echo "My account is now closed<br><br>";
         }else{
             throw new BankAccountException("Account is already closed<br>", 1);
         }

@@ -13,7 +13,9 @@ use ComBank\Transactions\DepositTransaction;
 use ComBank\Transactions\WithdrawTransaction;
 use ComBank\Exceptions\BankAccountException;
 use ComBank\Exceptions\FailedTransactionException;
+use ComBank\Exceptions\InvalidOverdraftFundsException;
 use ComBank\Exceptions\ZeroAmountException;
+use PHPUnit\Runner\InvalidOrderException;
 
 require_once 'bootstrap.php';
 
@@ -21,9 +23,10 @@ require_once 'bootstrap.php';
 //---[Bank account 1]---/
 // create a new account1 with balance 400
 $bankAccount1 = new BankAccount(400);
+pl('--------- [Start testing bank account #1, noOverdraft (400.0 funds)] --------');
 try {
     // show balance account
-    echo "My Balance:".$bankAccount1->getBalance()."<br>";
+    echo "My Balance:".$bankAccount1->getBalance()."<br><br>";
     // close account
     $bankAccount1->closeAccount();
     // reopen account
@@ -39,8 +42,13 @@ try {
     pl('My new balance after withdrawal (-25) : ' . $bankAccount1->getBalance());
 
     // withdrawal -600
-    pl('Doing transaction withdrawal (-600) with current balance ' . $bankAccount1->getBalance());
-    $bankAccount1->transaction(new WithdrawTransaction(600));
+    try{
+        pl('Doing transaction withdrawal (-600) with current balance ' . $bankAccount1->getBalance());
+        $bankAccount1->transaction(new WithdrawTransaction(600));
+    }catch(InvalidOverdraftFundsException $e){
+        pl($e->getMessage());
+    }
+    
 
 } catch (ZeroAmountException $e) {
     pl($e->getMessage());
@@ -50,8 +58,6 @@ try {
     pl('Error transaction: ' . $e->getMessage());
 }
 pl('My balance after failed last transaction : ' . $bankAccount1->getBalance());
-
-
 
 
 //---[Bank account 2]---/
@@ -91,7 +97,7 @@ try {
 } catch (FailedTransactionException $e) {
     pl('Error transaction: ' . $e->getMessage());
 }
-pl('My new balance after withdrawal (-20) with funds : ' . $bankAccount2->getBalance());
+pl('My new balance after withdrawal (-20) with funds : ' . $bankAccount2->getBalance()."<br>");
 $bankAccount2->closeAccount();
 try {
     $bankAccount2->closeAccount();
