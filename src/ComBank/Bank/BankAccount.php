@@ -36,7 +36,6 @@ class BankAccount implements BackAccountInterface
             $transaction->applyTransaction($this);
         }else{
             throw new BankAccountException("Error Processing Request", 1);
-            
         }
     }
     public function

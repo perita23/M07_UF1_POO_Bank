@@ -16,11 +16,7 @@ use ComBank\Transactions\Contracts\BankTransactionInterface;
 
 class WithdrawTransaction extends BaseTransaction implements BankTransactionInterface
 {
-    public function __construct(float $amount)
-    {
-        $this->validateAmount($amount);
-        $this->amount = $amount;
-    }
+    
     public function applyTransaction(BackAccountInterface $account): float
     {
         if ($account->getOverdraft()->isGrantOverdraftFunds($account->getBalance() - $this->amount)) {

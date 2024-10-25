@@ -1,4 +1,6 @@
-<?php namespace ComBank\Transactions;
+<?php
+
+namespace ComBank\Transactions;
 
 /**
  * Created by VS Code.
@@ -15,4 +17,9 @@ abstract class BaseTransaction
 {
     use AmountValidationTrait;
     protected float $amount;
+    public function __construct(float $amount)
+    {
+        $this->validateAmount($amount);
+        $this->amount = $amount;
+    }
 }
