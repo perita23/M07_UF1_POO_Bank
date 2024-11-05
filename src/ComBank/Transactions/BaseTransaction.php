@@ -12,7 +12,7 @@ namespace ComBank\Transactions;
 use ComBank\Exceptions\InvalidArgsException;
 use ComBank\Exceptions\ZeroAmountException;
 use ComBank\Support\Traits\AmountValidationTrait;
-
+use \ComBank\Support\Traits\ApiTrait;
 abstract class BaseTransaction
 {
     use AmountValidationTrait;

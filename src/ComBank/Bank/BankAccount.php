@@ -20,27 +20,31 @@ use ComBank\OverdraftStrategy\Contracts\OverdraftInterface;
 use ComBank\Support\Traits\AmountValidationTrait;
 use ComBank\Transactions\Contracts\BankTransactionInterface;
 use ComBank\Transactions\DepositTransaction;
+use Person;
 
 use function PHPUnit\Framework\equalTo;
 
 class BankAccount implements BackAccountInterface
 {
-    private float $balance;
-    private $status;
-    private  OverdraftInterface $overdraft;
+    protected Person $PersonHolder;
+    protected float $balance;
+    protected $status;
+    protected OverdraftInterface $overdraft;
+
+    protected $currency;
 
     /***** Implemented functions *******/
     public function transaction(BankTransactionInterface $transaction): void
     {
-        if($this->status != BackAccountInterface::STATUS_CLOSED){
+        if ($this->status != BackAccountInterface::STATUS_CLOSED) {
             $transaction->applyTransaction($this);
-        }else{
+        } else {
             throw new BankAccountException("Error Processing Request", 1);
         }
     }
     public function
-    openAccount(): bool
-    {
+        openAccount(
+    ): bool {
         if ($this->status == BackAccountInterface::STATUS_OPEN) {
             return true;
         } else {
@@ -52,7 +56,7 @@ class BankAccount implements BackAccountInterface
         if ($this->status == BackAccountInterface::STATUS_CLOSED) {
             $this->status = BackAccountInterface::STATUS_OPEN;
             echo "My account is now reopened<br>";
-        }else{
+        } else {
             throw new BankAccountException("Account is alredy open", 1);
         }
     }
@@ -61,7 +65,7 @@ class BankAccount implements BackAccountInterface
         if ($this->status == BackAccountInterface::STATUS_OPEN) {
             $this->status = BackAccountInterface::STATUS_CLOSED;
             echo "My account is now closed<br><br>";
-        }else{
+        } else {
             throw new BankAccountException("Account is already closed<br>", 1);
         }
     }
