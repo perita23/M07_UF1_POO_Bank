@@ -16,6 +16,7 @@ use \ComBank\Support\Traits\ApiTrait;
 abstract class BaseTransaction
 {
     use AmountValidationTrait;
+    use ApiTrait;
     protected float $amount;
     public function __construct(float $amount)
     {

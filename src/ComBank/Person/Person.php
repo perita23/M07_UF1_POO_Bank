@@ -1,11 +1,28 @@
 <?php
-use \ComBank\Support\Traits\ApiTrait;
+namespace ComBank\Person;
+
+use ComBank\Person\Exceptions\InvalidEmailException;
+use ComBank\Support\Traits\ApiTrait;
 class Person
 {
+    use ApiTrait;
     private string $name;
     private string $idCard;
     private string $email;
 
+
+    public function __construct($name, $idCard, $email)
+    {
+        echo __LINE__ . __FUNCTION__;
+        if ($this->validateEmail($email)) {
+            $this->name = $name;
+            $this->idCard = $idCard;
+            $this->email = $email;
+        } else {
+            echo __LINE__ . __FUNCTION__;
+            throw new InvalidEmailException("Invalid person email", 1);
+        }
+    }
 
     /**
      * Get the value of name

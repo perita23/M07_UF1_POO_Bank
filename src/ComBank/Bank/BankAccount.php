@@ -18,19 +18,21 @@ use ComBank\Exceptions\FailedTransactionException;
 use ComBank\Exceptions\InvalidOverdraftFundsException;
 use ComBank\OverdraftStrategy\Contracts\OverdraftInterface;
 use ComBank\Support\Traits\AmountValidationTrait;
+use ComBank\Support\Traits\ApiTrait;
 use ComBank\Transactions\Contracts\BankTransactionInterface;
 use ComBank\Transactions\DepositTransaction;
-use Person;
+use ComBank\Person\Person;
 
 use function PHPUnit\Framework\equalTo;
+use function PHPUnit\Framework\throwException;
 
 class BankAccount implements BackAccountInterface
 {
+    use ApiTrait;
     protected Person $PersonHolder;
     protected float $balance;
     protected $status;
     protected OverdraftInterface $overdraft;
-
     protected $currency;
 
     /***** Implemented functions *******/
@@ -86,10 +88,23 @@ class BankAccount implements BackAccountInterface
         $this->balance = $amount;
     }
 
-    public function __construct($balance = null)
+    public function getPersonHolder()
+    {
+        return $this->PersonHolder;
+    }
+
+    public function setPersonHolder($PersonHolder)
+    {
+        $this->PersonHolder = $PersonHolder;
+        return $this;
+    }
+    public function __construct($balance = null, $currency = "€")
     {
         $this->balance = $balance;
         $this->status = BackAccountInterface::STATUS_OPEN;
         $this->overdraft = new NoOverdraft();
+        $this->currency = $currency;
     }
+
+
 }
