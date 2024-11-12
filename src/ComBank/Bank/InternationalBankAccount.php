@@ -1,5 +1,5 @@
 <?php
-
+namespace ComBank\Bank;
 use ComBank\Bank\BankAccount;
 use ComBank\Bank\Contracts\BackAccountInterface;
 use ComBank\Exceptions\BankAccountException;
@@ -11,11 +11,11 @@ class InternationalBankAccount extends BankAccount
     function getConvertedBalance(): float
     {
         $convBalance = $this->convertBalance($this->getBalance());
-        return $convBalance;
+        return $this->getBalance() * $convBalance;
     }
     function getConvertedCurrency(): string
     {
-        return "";
+        return "USD";
     }
 
 

@@ -18,20 +18,39 @@ use ComBank\Exceptions\ZeroAmountException;
 use PHPUnit\Runner\InvalidOrderException;
 use ComBank\Person\Exceptions\InvalidEmailException;
 use ComBank\Person\Person;
+use ComBank\Bank\InternationalBankAccount;
+use ComBank\Bank\NationalBankAccount;
 
 
 
 
 //---[Bank account 1]---/
 // create a new account1 with balance 400
-$bankAccount1 = new BankAccount(400);
+echo "<b>Creando bank account con un personHolder</b><br><br>";
+echo "Persona con email valido:<br>";
 try {
     $person = new Person("hugo", 2323, "hugobedmar@gmail.com");
+    echo "Email: " . $person->getEmail() . "<br>";
+    echo "Email validation => Email Valido<br><br>";
 } catch (InvalidEmailException $e) {
-    echo __LINE__;
-    echo "El email no es valido";
+    echo "El email no es valido<br><br>";
+}
+echo "Persona con email invalido<br>";
+try {
+    $person2 = new Person("hugo", 2323, "hugobedmar@example.com");
+    echo "Email: hugobedmar@example.com<br>";
+
+} catch (InvalidEmailException $e) {
+    echo "El email no es valido<br><br>";
 }
 
+$internationalBank = new InternationalBankAccount(400, "€");
+$internationalBank->setPersonHolder($person);
+echo "My Balance: " . $internationalBank->getBalance() . "<br><br>";
+echo "My converted balance: " . $internationalBank->getConvertedBalance() . "<br><br>";
+
+$bankAccount1 = new BankAccount(400);
+echo "<hr>";
 pl('--------- [Start testing bank account #1, noOverdraft (400.0 funds)] --------');
 try {
     // show balance account

@@ -30,7 +30,7 @@ trait ApiTrait
         if ($err) {
             echo "cURL Error #:" . $err;
         }
-        if ($response->format && $response->alias && $response->dns) {
+        if ($response->format && $response->dns) {
             return true;
         } else {
             return false;
@@ -38,8 +38,16 @@ trait ApiTrait
     }
     function convertBalance(float $amount): float
     {
+        $url = "https://api.freecurrencyapi.com/v1/latest?apikey=fca_live_2hxNSYwmLFBrM9bDEiesdxMeE4HnAe37U7WNe1uZ&currencies=USD&base_currency=EUR";
 
-        return $amount * 1.1;
+        $curl = curl_init($url);
+        curl_setopt(
+            $curl,
+            CURLOPT_RETURNTRANSFER,
+            true
+        );
+        $resp = json_decode(curl_exec($curl), true);
+        return $resp["data"]["USD"];
     }
 
     function detectFraud(BankTransactionInterface $interface): bool
