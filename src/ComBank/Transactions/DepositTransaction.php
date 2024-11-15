@@ -16,12 +16,12 @@ class DepositTransaction extends BaseTransaction implements BankTransactionInter
 {
     public function applyTransaction(BackAccountInterface $account): float
     {
-        if ($this->detectFraud($this)) {
+        $response = $this->detectFraud($this);
+        if (!$response["action"]) {
             $account->setBalance($account->getBalance() + $this->amount);
             return $account->getBalance();
         } else {
-            throw new FailedTransactionException("Error Processing Request", 1);
-
+            throw new FailedTransactionException("<b>Failed deposit transaction</b>: Risk = " . $response["risk"] . "", 1);
         }
 
     }

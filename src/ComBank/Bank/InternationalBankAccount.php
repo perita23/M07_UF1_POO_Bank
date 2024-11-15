@@ -15,6 +15,7 @@ class InternationalBankAccount extends BankAccount
     }
     function getConvertedCurrency(): string
     {
+
         return "USD";
     }
 

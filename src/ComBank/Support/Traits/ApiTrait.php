@@ -2,6 +2,7 @@
 namespace ComBank\Support\Traits;
 
 use ComBank\Transactions\Contracts\BankTransactionInterface;
+use stdClass;
 
 trait ApiTrait
 {
@@ -22,7 +23,7 @@ trait ApiTrait
             CURLOPT_POSTFIELDS => $post_data,
         ));
 
-        $response = json_decode(curl_exec($curl));
+        $response = json_decode(curl_exec($curl), true);
         $err = curl_error($curl);
 
         curl_close($curl);
@@ -30,7 +31,7 @@ trait ApiTrait
         if ($err) {
             echo "cURL Error #:" . $err;
         }
-        if ($response->format && $response->dns) {
+        if ($response["format"] && $response["dns"]) {
             return true;
         } else {
             return false;
@@ -47,11 +48,32 @@ trait ApiTrait
             true
         );
         $resp = json_decode(curl_exec($curl), true);
-        return $resp["data"]["USD"];
+        return floatval(number_format($resp["data"]["USD"], 4, "."));
     }
 
-    function detectFraud(BankTransactionInterface $interface): bool
+    function detectFraud(BankTransactionInterface $interface): array
     {
-        return true;
+        $curl = curl_init();
+
+        $data = [
+            'movementType' => $interface->getTransactionInfo(),
+            'amount' => $interface->getAmount()
+        ];
+
+        $post_data = http_build_query($data);
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://frauddetectorapi.onrender.com",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => $post_data,
+        ));
+
+        $response = json_decode(curl_exec($curl), true);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        return $response;
     }
 }
