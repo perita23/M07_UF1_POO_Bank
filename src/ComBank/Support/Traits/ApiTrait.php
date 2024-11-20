@@ -76,4 +76,25 @@ trait ApiTrait
 
         return $response;
     }
+    function valPhoneNumber($phoneNumber)
+    {
+        $apiUrl = "https://api.veriphone.io/v2/verify?phone=" . urlencode($phoneNumber) . "&key=14D6A66C98DF42748208ECCE02538028";
+
+        $curl = curl_init($apiUrl);
+
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 10);
+        $response = curl_exec($curl);
+
+        if ($response === false) {
+            $error = curl_error($curl);
+            curl_close($curl);
+            throw new \Exception("Error en la solicitud de validación de teléfono: " . $error);
+        }
+
+        curl_close($curl);
+        $data = json_decode($response, true);
+
+        return isset($data['phone_valid']) ? $data['phone_valid'] : false;
+    }
 }

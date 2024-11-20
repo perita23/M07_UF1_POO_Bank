@@ -9,14 +9,20 @@ class Person
     private string $name;
     private string $idCard;
     private string $email;
+    private int $phoneNumber;
 
 
-    public function __construct($name, $idCard, $email)
+    public function __construct($name, $idCard, $email, $phoneNumber)
     {
         if ($this->validateEmail($email)) {
             $this->name = $name;
             $this->idCard = $idCard;
             $this->email = $email;
+        } else {
+            throw new InvalidEmailException("Invalid person email", 1);
+        }
+        if ($this->valPhoneNumber($phoneNumber) == "succes") {
+            $this->phoneNumber = $phoneNumber;
         } else {
             throw new InvalidEmailException("Invalid person email", 1);
         }
@@ -78,6 +84,26 @@ class Person
     public function setEmail($email)
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of phoneNumber
+     */
+    public function getPhoneNumber()
+    {
+        return $this->phoneNumber;
+    }
+
+    /**
+     * Set the value of phoneNumber
+     *
+     * @return  self
+     */
+    public function setPhoneNumber($phoneNumber)
+    {
+        $this->phoneNumber = $phoneNumber;
 
         return $this;
     }
