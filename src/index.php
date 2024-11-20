@@ -133,6 +133,7 @@ use ComBank\Person\Exceptions\InvalidPhoneNumberException;
             <div class="card shadow p-4">
                 <div class="card-body">
                     <?php
+                    echo "<hr>";
                     echo "<b>Creando bank account con un personHolder</b><br><br>";
                     echo "Persona con numero invalido:<br>";
                     try {
@@ -191,19 +192,11 @@ use ComBank\Person\Exceptions\InvalidPhoneNumberException;
                     }
 
                     /* Doing Withdraw transaction */
-                    pl('Doing transaction deposit (+35000) -wich must failed due fraud- with current balance ' .
+                    pl('Doing transaction withdraw (-350) -wich should be aproved- with current balance ' .
                         $internationalBank->getBalance());
                     try {
-                        $internationalBank->transaction(new DepositTransaction(35000));
-                        pl('My new balance after deposit (+35000) : ' . $internationalBank->getBalance());
-                    } catch (FailedTransactionException $e) {
-                        echo $e->getMessage() . "<br>";
-                    }
-                    pl('Doing transaction deposit (+350) -wich should be aproved- with current balance ' .
-                        $internationalBank->getBalance());
-                    try {
-                        $internationalBank->transaction(new DepositTransaction(350));
-                        pl('My new balance after deposit (+350) : ' . $internationalBank->getBalance());
+                        $internationalBank->transaction(new WithdrawTransaction(350));
+                        pl('My new balance after withdraw (-350) : ' . $internationalBank->getBalance());
                     } catch (FailedTransactionException $e) {
                         echo $e->getMessage() . "<br>";
                     }
